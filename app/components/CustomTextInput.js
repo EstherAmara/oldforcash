@@ -4,9 +4,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import colours from '../../assets/colours';
 
-function CustomTextInput({ icon, ...otherProps }) {
+function CustomTextInput({ icon, width = '100%', ...otherProps }) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { width }]}>
             { icon && 
                 <MaterialCommunityIcons 
                     name={ icon } 
@@ -17,6 +17,7 @@ function CustomTextInput({ icon, ...otherProps }) {
             }
             <TextInput 
                 style={styles.textInput}
+                placeholderTextColor={colours.mediumGray}
                 {...otherProps}
             />
         </View>
@@ -35,7 +36,9 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: 18,
         fontFamily: Platform.OS === 'android' ? 'Roboto' : 'Avenir',
-        color: colours.darkGray
+        color: colours.darkGray,
+        // backgroundColor: 'blue',
+        flex: 1
     }
 })
 

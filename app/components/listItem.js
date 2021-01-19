@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, Text, View, StyleSheet, TouchableHighlight } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import colours from '../../assets/colours';
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -16,9 +17,16 @@ function ListItem({ title, subTitle, IconComponent, image, style={padding: 15}, 
                     {IconComponent}
                     {image && <Image style={styles.image} source={image}/>}
                     <View style={styles.detailsContainer}>
-                        <Text style={styles.title}> { title } </Text>
-                        {subTitle && <Text style={styles.subTitle}> { subTitle } </Text>}
+                        <Text style={styles.title} numberOfLines={1}> { title } </Text>
+
+                        {subTitle && <Text style={styles.subTitle} numberOfLines={2}> { subTitle } </Text>}
                     </View>
+                    <MaterialCommunityIcons 
+                        name='chevron-right'
+                        size={20}
+                        color={colours.mediumGray}
+                        style={{alignSelf: 'center'}}
+                    />
                 </View>
             </TouchableHighlight>
         </Swipeable>
@@ -37,7 +45,8 @@ const styles = StyleSheet.create({
     },
     detailsContainer: {
         marginLeft: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flex: 1,
     },
     title: {
         fontWeight: '600',
