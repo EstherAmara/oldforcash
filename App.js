@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Platform, StatusBar, Switch } from 'react-native';
-
-import * as ImagePicker from 'expo-image-picker';
+import { StyleSheet, Text, View, SafeAreaView, Platform, StatusBar, Switch, Button, Image } from 'react-native';
 
 import Screen from './app/components/Screen';
+import ImageInput from './app/components/ImageInput';
+import ImageInputList from './app/components/ImageInputList';
+import ListingEditScreen from './app/screens/ListingEditScreen';
 
 
 export default function App() {
-	const requestPermission = async () => {
-		const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-		if (!granted)
-			alert('You need to enable permission to acess the library');
-	}
-
-	useEffect(() => {
-		requestPermission();
-	}, [])
 	return (
-		<Screen>
-
-		</Screen>
+        // <Screen>
+		// 	<ImageInputList 
+		// 		imageUris = { imageUris }
+		// 		onAddImage = { uri => handleAdd(uri) }
+		// 		onRemoveImage = { uri => handleRemove(uri) }
+		// 	/>
+		// </Screen>
+		<ListingEditScreen />
 	);
 }
 
@@ -30,7 +27,5 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15,
 		paddingTop: 70
 
-	},
-	button: {		
 	}
 });

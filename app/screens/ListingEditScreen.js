@@ -1,17 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 import CategoryPickerItem from '../components/CategoryPickerItem';
-import CustomPicker from '../components/CustomPicker';
 import { CustomForm, CustomFormPicker, CustomFormField, SubmitButton} from '../components/form';
-import Screen from '../components/Screen'
+import FormImagePicker from '../components/form/FormImagePicker';
+import Screen from '../components/Screen';
+import useLocation from '../hooks/useLocation';
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label('Title'),
     price: Yup.number().required().min(1).max(10000).label('Price'),
     description: Yup.string().label('Description'),
-    category: Yup.object().required().nullable().label('Category')
+    category: Yup.object().required().nullable().label('Category'),
+    images: Yup.array().min(1, 'Please select at least one image'),
 });
 
 const categories = [
@@ -72,6 +73,8 @@ const categories = [
   ];
 
 function ListingEditScreen(props) {
+	const location = useLocation();
+
     return (
         <Screen>
             <CustomForm 
@@ -79,11 +82,13 @@ function ListingEditScreen(props) {
                     title: '',
                     price: '',
                     description: '',
-                    category: null
+                    category: null,
+                    images: []
                 }}
-                onSubmit = { values => console.log(values)}
-                validationSchema = { validationSchema }
+				validationSchema = { validationSchema }
+                onSubmit = {(values) => console.log(location)}
             >
+				<FormImagePicker name="images" />
                 <CustomFormField 
                     maxLength={255}
                     name="title"
@@ -97,7 +102,8 @@ function ListingEditScreen(props) {
                     width={120}
                 />
                 <CustomFormPicker
-                    items={categories}
+					items={categories}
+					name="category"
                     numOfColumns = {3}
                     PickerItemComponent = {CategoryPickerItem}
                     placeholder="Category"
@@ -110,7 +116,7 @@ function ListingEditScreen(props) {
                     numberOfLines={3}
                     placeholder="Description"
                 />
-                <SubmitButton title="Post" />
+                <SubmitButton title="POST" /> 
             </CustomForm>
         </Screen>
     );
