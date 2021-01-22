@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
-import Screen from '../components/Screen';
 import ListItem from '../components/listItem';
 import Separator from '../components/separator';
 import ListItemDeleteAction from '../components/listItemDeleteAction';
@@ -33,7 +32,7 @@ function MessagesScreen(props) {
 
     return (
         // we put the safearea view in a screen component so that we can use this  div whenever we want a content to be below the statusbar
-        <Screen>
+        <View>
             <FlatList
                 data = { messages }
                 keyExtractor = {(message) => message.id.toString()}
@@ -62,7 +61,7 @@ function MessagesScreen(props) {
                     ])
                 }}
             />
-        </Screen>
+        </View>
     );
 };
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Image, ImageBackground, StyleSheet, View, Text } from 'react-native';
-import CustomButtons from '../../components/button';
+
 import CustomButton from '../components/customButton';
+import route from '../navigation/route';
 
 
-function WelcomeScreen(props) {
+function WelcomeScreen({ navigation }) {
     return (
         <ImageBackground 
         style={styles.background}
@@ -14,8 +15,8 @@ function WelcomeScreen(props) {
                 <Text style={styles.tagline}> Trade your Old stuff for Cash</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <CustomButton title='Login' onPress={()=>console.log('hello')} />
-                <CustomButton title='Register' onPress={()=>console.log('hello')} buttonColour='secondary' />   
+                <CustomButton title='Login' onPress={()=>navigation.navigate(route.LOGIN)} />
+                <CustomButton title='Register' onPress={()=>navigation.navigate(route.REGISTER)} buttonColour='secondary' />   
             </View>
         </ImageBackground>
     );

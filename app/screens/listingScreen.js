@@ -6,6 +6,8 @@ import Card from '../components/card';
 import ListItem from '../components/listItem';
 
 import Screen from '../components/Screen';
+import route from '../navigation/route';
+import ListingDetailScreen from './listingDetailScreen';
 
 const initialListings = [
     {
@@ -21,7 +23,7 @@ const initialListings = [
         image: require('../../assets/couch.jpg')
     }
 ]
-function ListingScreen(props) {
+function ListingScreen({ navigation }) {
     const [listings, setListing] = useState(initialListings);
     const [refresh, setRefresh] = useState(false);
 
@@ -35,12 +37,8 @@ function ListingScreen(props) {
                         title={item.title}
                         subTitle={"$" + item.price}
                         image={item.image}
+                        onPress={ () => navigation.navigate(route.LISTING_DETAILS, item)}
                     />
-                    // <ListItem
-                    //     title={item.title}
-                    //     subTitle={item.price}
-                    //     image={item.image}
-                    // />
                 )}
                 refreshing = { refresh }
                 onRefresh = {() => {

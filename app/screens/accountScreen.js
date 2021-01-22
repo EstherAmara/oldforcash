@@ -6,6 +6,8 @@ import Icon from '../components/icon';
 import ListItem from '../components/listItem';
 import Screen from '../components/Screen';
 import Separator from '../components/separator';
+import route from '../navigation/route';
+import MessagesScreen from '../screens/messagesScreen';
 
 const menuItems = [
     {
@@ -14,7 +16,8 @@ const menuItems = [
         icon: {
             name: "format-list-bulleted",
             backgroundColor: colours.primary
-        }
+        },
+        targetScreen: route.MESSAGES
     },
     {
         id: 2,
@@ -22,11 +25,12 @@ const menuItems = [
         icon: {
             name: "email",
             backgroundColor: colours.secondary
-        }
+        },
+        targetScreen: route.MESSAGES
     }
 ]
 
-function AccountScreen(props) {
+function AccountScreen({ navigation }) {
     return (
         <Screen style={styles.screenContainer}>
             <View style={styles.container}>
@@ -44,6 +48,7 @@ function AccountScreen(props) {
                     ItemSeparatorComponent={Separator}
                     renderItem={({ item }) => (
                         <ListItem
+                            onPress={() => navigation.navigate(item.targetScreen)}
                             title={item.title}
                             IconComponent={
                                 <Icon 
