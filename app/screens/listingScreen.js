@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, StyleSheet, Text } from 'react-native';
 
-import colours from '../../assets/colours';
+import listingsApi from '../api/listings';
+
+import ActivityIndicator from '../components/ActivityIndicator';
 import Card from '../components/card';
-import ListItem from '../components/listItem';
-
-import Screen from '../components/Screen';
+import colours from '../../assets/colours';
+import CustomButton from '../components/customButton';
 import route from '../navigation/route';
-import ListingDetailScreen from './listingDetailScreen';
+import Screen from '../components/Screen';
+import useApi from '../hooks/useApi';
 
-const initialListings = [
-    {
-        id: 1,
-        title: 'Red jacket for sale',
-        price: 100,
-        image: require('../../assets/jacket.jpg')
-    },
-    {
-        id: 2,
-        title: 'Couch in great condition',
-        price: 1000,
-        image: require('../../assets/couch.jpg')
-    }
-]
 function ListingScreen({ navigation }) {
-    const [listings, setListing] = useState(initialListings);
-    const [refresh, setRefresh] = useState(false);
+    
+    const {data:listings, error, loading, request:loadListings} = useApi(listingsApi.getListings);
+
+    useEffect(() => {
+        loadListings();
+    }, []);
 
     return (
         <Screen style={styles.screenContainer}>
+        
+            {
+                error && <> 
+                    <Text> Couldn't retrieve the listings </Text>
+                    <CustomButton onPress={loadListings} title="Retry"> Retry </CustomButton>
+                </>
+            }
+            <ActivityIndicator visible={loading} />
             <FlatList
                 data={listings}
                 keyExtractor={listing => listing.id.toString()}
@@ -36,21 +36,10 @@ function ListingScreen({ navigation }) {
                     <Card
                         title={item.title}
                         subTitle={"$" + item.price}
-                        image={item.image}
+                        imageUrl={item.images[0].url}
                         onPress={ () => navigation.navigate(route.LISTING_DETAILS, item)}
                     />
                 )}
-                refreshing = { refresh }
-                onRefresh = {() => {
-                    setListing([
-                        {
-                            id: 3,
-                            title: 'Another Couch in great condition',
-                            price: 1000,
-                            image: require('../../assets/couch.jpg')
-                        }   
-                    ])
-                }}
             />
         </Screen>
     );

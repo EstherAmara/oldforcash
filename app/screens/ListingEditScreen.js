@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 
 import CategoryPickerItem from '../components/CategoryPickerItem';
 import { CustomForm, CustomFormPicker, CustomFormField, SubmitButton} from '../components/form';
 import FormImagePicker from '../components/form/FormImagePicker';
+import listingsApi from '../api/listings';
 import Screen from '../components/Screen';
 import useLocation from '../hooks/useLocation';
+import UploadScreen from '../components/UploadScreen';
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required().min(1).label('Title'),
@@ -74,9 +76,28 @@ const categories = [
 
 function ListingEditScreen(props) {
 	const location = useLocation();
+	const [uploadVisible, setUploadVisible] = useState(false);
+	const [progress, setProgress] = useState(0);
+
+	const handleSubmit = async (listing, { resetForm }) => {
+		setProgress(0);
+		setUploadVisible(true);
+		const result = await listingsApi.addListing(
+			{...listing, location},
+			progress => setProgress(progress)
+			);
+		setUploadVisible(false);
+
+		if(!result.ok) {
+			setUploadVisible(false);
+			return alert('Something went wrong');
+		}
+		resetForm();
+	}
 
     return (
         <Screen>
+			<UploadScreen done={ ()=> setUploadVisible(false) } progress={progress} visible={uploadVisible} />
             <CustomForm 
                 initialValues = {{
                     title: '',
@@ -86,7 +107,7 @@ function ListingEditScreen(props) {
                     images: []
                 }}
 				validationSchema = { validationSchema }
-                onSubmit = {(values) => console.log(location)}
+                onSubmit = {handleSubmit}
             >
 				<FormImagePicker name="images" />
                 <CustomFormField 
