@@ -6,8 +6,8 @@ import Icon from '../components/icon';
 import ListItem from '../components/listItem';
 import Screen from '../components/Screen';
 import Separator from '../components/separator';
+import useAuth from '../hooks/useAuth';
 import route from '../navigation/route';
-import MessagesScreen from '../screens/messagesScreen';
 
 const menuItems = [
     {
@@ -31,12 +31,14 @@ const menuItems = [
 ]
 
 function AccountScreen({ navigation }) {
+    const { user, logOut } = useAuth();
+
     return (
         <Screen style={styles.screenContainer}>
             <View style={styles.container}>
                 <ListItem 
-                    title="Esthere Amara"
-                    subTitle="esthere@gmail.com"
+                    title={user.name}
+                    subTitle={user.email}
                     image={require('../../assets/mosh.jpg')}
                 />
             </View>
@@ -70,6 +72,7 @@ function AccountScreen({ navigation }) {
                             backgroundColor={colours.warning}
                         />
                     }
+                    onPress = {() => logOut()}
                 />
             </View>
         </Screen>

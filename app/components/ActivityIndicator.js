@@ -5,16 +5,24 @@ import LottieView from 'lottie-react-native';
 function ActivityIndicator({ visible = false }) {
     if (!visible) return null;
     return (
-        <LottieView
-            autoPlay
-            loop
-            source={require('../../assets/animations/lf30_editor_yzy51cgg.json')} />
+        <View style={styles.overlay}>
+            <LottieView
+                autoPlay
+                loop
+                source={require('../../assets/animations/lf30_editor_yzy51cgg.json')} 
+            />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-
+    overlay: {
+        backgroundColor: 'white',
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
+        opacity: 0.8,
+        zIndex: 1,
     }
 });
 

@@ -1,54 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
-import { CustomForm, CustomFormField, SubmitButton } from '../components/form';
+
+import auth from '../api/auth';
+import users from '../api/users';
+import ActivityIndicator from '../components/ActivityIndicator';
+import { CustomForm, CustomFormField, ErrorMessage, SubmitButton } from '../components/form';
 
 import Screen from '../components/Screen';
+import useApi from '../hooks/useApi';
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required().label('Name'),
+    email: Yup.string().required().email().label('Email'),
+    password: Yup.string().required().min(4).label('Password'),
+});
 
 function RegisterScreen(props) {
-    const validationSchema = Yup.object().shape({
-        name: Yup.string().required().label('Name'),
-        email: Yup.string().required().email().label('Email'),
-        password: Yup.string().required().min(4).label('Password'),
-    });
+    const registerApi = useApi(users.register);
+    const loginApi = useApi(auth.login)
+    const [error, setError] = useState();
+    const { logIn } = useAuth();
+
+    const handleSubmit = async (userInfo) => {
+        const result = await registerApi.request(userInfo);
+        if(!result.ok) {
+            if (result.data) {
+                setError(result.data.error);
+            }
+            else {
+                setError("An unexpected error occurred.");
+                console.log(result);
+            }
+            return;
+        };
+        const { data: authToken} = await loginApi.request(
+            userInfo.email,
+            userInfo.password
+        );
+        logIn(authToken);
+    }
     return (
-        <Screen style={styles.container}>
-            <Image
-                source={require('../../assets/logo-red.png')}
-                style={styles.image}
+        <>
+            <ActivityIndicator visible={registerApi.loading || loginApi.loading} 
             />
-            <CustomForm
-                initialValues={{name: '', email: '', password: ''}}
-                validationSchema = {validationSchema}
-                onSubmit = {(values) => console.log(values)}
-            >
-                <CustomFormField
-                    icon='account'
-                    name='name'    
-                    placeholder='Name'     
-                    textContentType="name"            
+            <Screen style={styles.container}>
+                <Image
+                    source={require('../../assets/logo-red.png')}
+                    style={styles.image}
                 />
-                <CustomFormField
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    keyBoard='email-address'
-                    icon='email'
-                    name='email'
-                    placeholder='Email'
-                    textContentType="emailAddress" 
-                />
-                <CustomFormField
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    icon='lock'
-                    name='password'
-                    placeholder='Password'
-                    secureTextContent
-                    textContentType="password" 
-                />
-                <SubmitButton title="Register" />
-            </CustomForm>
-        </Screen>
+                <CustomForm
+                    initialValues={{name: '', email: '', password: ''}}
+                    validationSchema = {validationSchema}
+                    onSubmit = {handleSubmit}
+                >
+                    <ErrorMessage error={error} visible={error}/>
+                    <CustomFormField
+                        icon='account'
+                        name='name'    
+                        placeholder='Name'     
+                        textContentType="name"            
+                    />
+                    <CustomFormField
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        keyBoard='email-address'
+                        icon='email'
+                        name='email'
+                        placeholder='Email'
+                        textContentType="emailAddress" 
+                    />
+                    <CustomFormField
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        icon='lock'
+                        name='password'
+                        placeholder='Password'
+                        secureTextEntry
+                        textContentType="password" 
+                    />
+                    <SubmitButton title="Register" />
+                </CustomForm>
+            </Screen>
+        </>
     );
 }
 
